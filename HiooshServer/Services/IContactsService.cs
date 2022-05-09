@@ -5,5 +5,8 @@ namespace HiooshServer.Services
     {
         IEnumerable<Contact> GetAllContacts();
         void AddContact(Contact contact);
+        void RemoveContact(string id);
+        Contact GetContact(string id);
+        void UpdateContact(string id, string nickname, string image, List<Message> chat);
     }
 }

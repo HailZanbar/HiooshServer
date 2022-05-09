@@ -33,5 +33,30 @@ namespace HiooshServer.Controllers
             }
            return BadRequest();
         }
+
+        [HttpPost("{id")]
+        public async Task<IActionResult> Edit(string id, string nickname, string image, List<Message> chat)
+        {
+            if (ModelState.IsValid)
+            {
+                _contactsService.UpdateContact(id, nickname, image, chat);
+                return NoContent();
+
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete("{id")]
+        public Task<IActionResult> Delete(string id)
+        {
+            _contactsService.RemoveContact(id);
+            return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public Contact Get(string id)
+        {
+            return _contactsService.GetContact(id);
+        }
     }
 }
