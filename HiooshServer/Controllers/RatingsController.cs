@@ -8,34 +8,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HiooshServer.Data;
 using HiooshServer.Models;
+using HiooshServer.Services;
 
 namespace HiooshServer.Controllers
 {
     public class RatingsController : Controller
     {
-        private readonly HiooshServerContext _context;
+        //private readonly HiooshServerContext _context;
+        private readonly IRatingsService _ratingsService;
 
         public RatingsController(HiooshServerContext context)
         {
-            _context = context;
+            //_context = context;
+            _ratingsService = new RatingService();
         }
 
         // GET: Ratings
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Rating.ToListAsync());
+            return View(_ratingsService.GetAllRating());
         }
 
         // GET: Ratings/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var rating = await _context.Rating
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rating = _ratingsService.GetRating(id);
             if (rating == null)
             {
                 return NotFound();
@@ -55,27 +57,31 @@ namespace HiooshServer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NumberRating,StringRating,Name,Date")] Rating rating)
+        public IActionResult Create(int id, int NumberRating, string StringRating, string Name)
         {
+            Rating rating = new Rating();
+            rating.Id = id;
+            rating.NumberRating = NumberRating;
+            rating.StringRating = StringRating;
+            rating.Name = Name;
+            rating.Date = DateTime.Now.ToString("MM/dd/yyyy");
             if (ModelState.IsValid)
             {
-                rating.Date = DateTime.Now.ToString("MM/dd/yyyy");
-                _context.Add(rating);
-                await _context.SaveChangesAsync();
+                _ratingsService.AddRating(rating);
                 return RedirectToAction(nameof(Index));
             }
             return View(rating);
         }
 
         // GET: Ratings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var rating = await _context.Rating.FindAsync(id);
+            var rating = _ratingsService.GetRating(id);
             if (rating == null)
             {
                 return NotFound();
@@ -88,9 +94,9 @@ namespace HiooshServer.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NumberRating,StringRating,Name,Date")] Rating rating)
+        public IActionResult Edit(int id, int NumberRating, string StringRating)
         {
-            if (id != rating.Id)
+            if (id != id)
             {
                 return NotFound();
             }
@@ -99,12 +105,11 @@ namespace HiooshServer.Controllers
             {
                 try
                 {
-                    _context.Update(rating);
-                    await _context.SaveChangesAsync();
+                    _ratingsService.UpdateRating(id, NumberRating,StringRating);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RatingExists(rating.Id))
+                    if (!RatingExists(id))
                     {
                         return NotFound();
                     }
@@ -115,19 +120,18 @@ namespace HiooshServer.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(rating);
+            return View(_ratingsService.GetRating(id));
         }
 
         // GET: Ratings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var rating = await _context.Rating
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rating = _ratingsService.GetRating(id);
             if (rating == null)
             {
                 return NotFound();
@@ -139,17 +143,15 @@ namespace HiooshServer.Controllers
         // POST: Ratings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var rating = await _context.Rating.FindAsync(id);
-            _context.Rating.Remove(rating);
-            await _context.SaveChangesAsync();
+            _ratingsService.DeleteRating(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool RatingExists(int id)
         {
-            return _context.Rating.Any(e => e.Id == id);
+            return _ratingsService.GetAllRating().Any(e => e.Id == id);
         }
     }
 }

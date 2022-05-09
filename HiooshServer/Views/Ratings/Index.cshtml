@@ -3,26 +3,26 @@
 @{
     ViewData["Title"] = "Index";
 }
-
 <h1>List of ratings</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<p>The current average of the numerical rating is </p>
 <table class="table">
     <thead>
         <tr class="table-success">
             <th> 
-                Numerical rating
+                 @Html.DisplayNameFor(model => model.NumberRating)
             </th>
             <th> 
-                Verbal feedback
+                 @Html.DisplayNameFor(model => model.StringRating)
             </th>
             <th>
-                Name
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                Date
+                 @Html.DisplayNameFor(model => model.Date)
             </th>
             <th></th>
         </tr>
