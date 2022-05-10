@@ -1,0 +1,82 @@
+﻿@model IEnumerable<HiooshServer.Models.Rating>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="rating"> 
+    <h1>Search</h1>
+    <hr />
+    <form asp-action="Search">
+         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+          <div class="form-group row">
+                <div class="col-sm-10">
+                     <input name="query" class="form-control" placeholder="Enter here the query"></input>
+                </div>
+                 <div class="col-sm-2">
+                     <input type="submit" value="Search" class="btn btn-primary"/>
+                </div>
+           </div>
+    </form>
+    <hr />
+    @{
+        if (ViewData["count"] == "0")
+        {
+            <h4>The app is not rated. You can add a rating by clicking the "Create New Rating" button in the Ratings page.</h4>
+        }else if (ViewData["results"] == "0")
+        {
+            <h4>No matching search results.</h4>
+        }
+        else
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="bg-success">
+                        <th scope="col"> 
+                            @Html.DisplayNameFor(model => model.NumberRating)
+                        </th>
+                        <th scope="col"> 
+                            @Html.DisplayNameFor(model => model.StringRating)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="table-success">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumberRating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StringRating)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" role="button">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm" role="button">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-primary btn-sm" role="button">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    }
+    <hr />
+    <p>
+        <a asp-action="Index" class="btn btn-primary" role="button">Back to Ratings page</a>
+    </p>
+</div>
+

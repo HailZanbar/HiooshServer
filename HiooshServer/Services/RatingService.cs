@@ -5,6 +5,7 @@ namespace HiooshServer.Services
     public class RatingService : IRatingsService
     {
         private static List<Rating> ratings = new List<Rating>();
+     
         public List<Rating> GetAllRating()
         {
             return ratings;

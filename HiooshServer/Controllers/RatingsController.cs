@@ -26,7 +26,39 @@ namespace HiooshServer.Controllers
         // GET: Ratings
         public IActionResult Index()
         {
+            ViewData["count"] = _ratingsService.GetAllRating().Count.ToString();
+            float sum = 0;
+            foreach(var item in _ratingsService.GetAllRating())
+            {
+                sum = sum + item.NumberRating;
+            }
+            float average = sum / _ratingsService.GetAllRating().Count;
+            ViewData["average"] = average;
             return View(_ratingsService.GetAllRating());
+        }
+
+
+        // GET: Ratings
+        public IActionResult Search()
+        {
+            ViewData["count"] = _ratingsService.GetAllRating().Count.ToString();
+            return View(_ratingsService.GetAllRating());
+        }
+
+        [HttpPost]
+        public IActionResult Search(string query)
+        {
+            ViewData["count"] = _ratingsService.GetAllRating().Count.ToString();
+            List<Rating> results = new List<Rating>();
+            foreach (var rating in _ratingsService.GetAllRating())
+            {
+                if (rating.StringRating.Contains(query) || rating.Name.Contains(query))
+                {
+                    results.Add(rating);
+                }
+            }
+            ViewData["results"] = results.Count.ToString();
+            return View(results);
         }
 
         // GET: Ratings/Details/5
