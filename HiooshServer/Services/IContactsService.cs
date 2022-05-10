@@ -8,5 +8,8 @@ namespace HiooshServer.Services
         void RemoveContact(string id);
         Contact GetContact(string id);
         void UpdateContact(string id, string nickname, string image, List<Message> chat);
+        IEnumerable<Message> getMessages(string id);
+        void addMessage (string id, Message message);
+
     }
 }

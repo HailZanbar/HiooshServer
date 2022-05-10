@@ -17,7 +17,7 @@ namespace HiooshServer.Services
             contacts.Add(contact);
         }
 
-        Contact GetContact(string id)
+        public Contact GetContact(string id)
         {
             if (contacts != null)
             {
@@ -26,7 +26,7 @@ namespace HiooshServer.Services
             return null;
         }
 
-        void RemoveContact(string id)
+        public void RemoveContact(string id)
         {
             Contact contact = GetContact(id);
             if (contact != null)
@@ -35,7 +35,7 @@ namespace HiooshServer.Services
             }
             
         }
-        void UpdateContact(string id, string nickname, string image, List<Message> chat)
+        public void UpdateContact(string id, string nickname, string image, List<Message> chat)
         {
             Contact contact = GetContact(id);
             if (contact != null)
@@ -44,7 +44,27 @@ namespace HiooshServer.Services
                 contact.image = image;
                 contact.Chat = chat;
             }
+        }
 
+        // get the chat with the contact with this id
+        public IEnumerable<Message> GetMessages(string id)
+        {
+            Contact contact = GetContact(id);
+            if (contacts != null)
+            {
+                return contact.Chat;
+            }
+            return null;
+        }
+
+        // add message to the chat with the contact with this id
+        public void AddMessage(string id, Message message)
+        {
+            Contact contact = GetContact(id);
+            if (contacts != null)
+            {
+                contact.Chat.Add(message);
+            }
         }
     }
 }
