@@ -64,14 +64,15 @@ namespace HiooshServer.Controllers
         [HttpGet("{id}")]
         public IActionResult GetMessages(string id)
         {
-            return Json(_contactsService.getMessages(id));
+            return Json(_contactsService.GetMessages(id));
         }
         [HttpPost("{id}")]
-        public IActionResult AddMessage(string id, Message message)
+        public IActionResult AddMessage(string id1 , int id2, string type, string content, string own, string time, string date)
         {
+            Message message = new Message(id2, type, content, own, time, date);
             if (!ModelState.IsValid)
             {
-                _contactsService.addMessage(id, message);
+                _contactsService.AddMessage(id1, message);
                 return NoContent();
             }
             return BadRequest();
