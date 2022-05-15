@@ -17,10 +17,10 @@ namespace HiooshServer.Controllers
         //private readonly HiooshServerContext _context;
         private readonly IRatingsService _ratingsService;
 
-        public RatingsController(HiooshServerContext context)
+        public RatingsController(IRatingsService ratingsService)
         {
             //_context = context;
-            _ratingsService = new RatingService();
+            _ratingsService = ratingsService;
         }
 
         // GET: Ratings
