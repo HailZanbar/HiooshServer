@@ -5,39 +5,53 @@ namespace HiooshServer.Services
     public class ContactService : IContactsService
     {
 
-        private static List<Contact> contacts = new List<Contact>();
-        public IEnumerable<Contact> GetAllContacts()
+        private static List<User> users = new List<User>();
+
+        private User getUser(string id)
         {
-            return contacts;
+            return users.Find(x => x.Id == id);
         }
 
-
-        public void AddContact(Contact contact)
+        public IEnumerable<Contact> GetAllContacts(string userID)
         {
-            contacts.Add(contact);
-        }
-
-        public Contact GetContact(string id)
-        {
-            if (contacts != null)
+            User user = getUser(userID);
+            if (user == null)
             {
-                return contacts.Find(x => x.Id == id);
+                return null;
+            }
+            return user.Contacts;
+        }
+
+
+        public void AddContact(string userID, Contact contact)
+        {
+            User user = getUser(userID);
+            user.Contacts.Add(contact);
+        }
+
+        public Contact GetContact(string userID, string contactID)
+        {
+            User user = getUser(userID);
+            if (user.Contacts != null)
+            {
+                return user.Contacts.Find(x => x.Id == contactID);
             }
             return null;
         }
 
-        public void RemoveContact(string id)
+        public void RemoveContact(string userID, string contactID)
         {
-            Contact contact = GetContact(id);
+            User user = getUser(userID);
+            Contact contact = GetContact(userID, contactID);
             if (contact != null)
             {
-                contacts.Remove(contact);
+                user.Contacts.Remove(contact);
             }
             
         }
-        public void UpdateContact(string id, string nickname, string image, List<Message> chat)
+        public void UpdateContact(string userID, string contactID, string nickname, string image, List<Message> chat)
         {
-            Contact contact = GetContact(id);
+            Contact contact = GetContact(userID, contactID);
             if (contact != null)
             {
                 contact.Nickname = nickname;
@@ -47,24 +61,17 @@ namespace HiooshServer.Services
         }
 
         // get the chat with the contact with this id
-        public IEnumerable<Message> GetMessages(string id)
+        public IEnumerable<Message> GetMessages(string userID, string contactID)
         {
-            Contact contact = GetContact(id);
-            if (contacts != null)
-            {
-                return contact.Chat;
-            }
-            return null;
+            Contact contact = GetContact(userID, contactID);
+            return contact.Chat;
         }
 
         // add message to the chat with the contact with this id
-        public void AddMessage(string id, Message message)
+        public void AddMessage(string userID, string contactID, Message message)
         {
-            Contact contact = GetContact(id);
-            if (contacts != null)
-            {
-                contact.Chat.Add(message);
-            }
+            Contact contact = GetContact(userID, contactID);
+            contact.Chat.Add(message);
         }
     }
 }

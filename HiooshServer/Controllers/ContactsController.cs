@@ -17,29 +17,29 @@ namespace HiooshServer.Controllers
 
         // return the contacts of the user
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string userID)
         {
             // need to fix the async
-            return Json(_contactsService.GetAllContacts());
+            return Json(_contactsService.GetAllContacts(userID));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Contact contact)
+        public IActionResult Create(string userID, Contact contact)
         {
            if (!ModelState.IsValid)
             {
-                _contactsService.AddContact(contact);
+                _contactsService.AddContact(userID, contact);
                 return Created(string.Format("/api/contacts/{0}", contact.Id), contact);
             }
            return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(string id, string nickname, string image, List<Message> chat)
+        public IActionResult Edit(string userID, string id, string nickname, string image, List<Message> chat)
         {
             if (ModelState.IsValid)
             {
-                _contactsService.UpdateContact(id, nickname, image, chat);
+                _contactsService.UpdateContact(userID, id, nickname, image, chat);
                 return NoContent();
 
             }
@@ -47,32 +47,34 @@ namespace HiooshServer.Controllers
         }
 
         [HttpDelete("{id")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string userID, string id)
         {
-            _contactsService.RemoveContact(id);
+            _contactsService.RemoveContact(userID, id);
             return NoContent();
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(string id)
+        public IActionResult Get(string userID, string id)
         {
-            return Json(_contactsService.GetContact(id));
+            return Json(_contactsService.GetContact(userID, id));
         }
 
         // need to check how to add the "messages" to the url
-
+        [Route("api/contacts/{id}/messages")]
         [HttpGet("{id}")]
-        public IActionResult GetMessages(string id)
+        public IActionResult GetMessages(string userID, string id)
         {
-            return Json(_contactsService.GetMessages(id));
+            return Json(_contactsService.GetMessages(userID, id));
         }
+
+        [Route("api/contacts/{id}/messages")]
         [HttpPost("{id}")]
-        public IActionResult AddMessage(string id1 , int id2, string type, string content, string own, string time, string date)
+        public IActionResult AddMessage(string userID, string id , int id2, string type, string content, string own, string time, string date)
         {
             Message message = new Message(id2, type, content, own, time, date);
             if (!ModelState.IsValid)
             {
-                _contactsService.AddMessage(id1, message);
+                _contactsService.AddMessage(userID, id, message);
                 return NoContent();
             }
             return BadRequest();

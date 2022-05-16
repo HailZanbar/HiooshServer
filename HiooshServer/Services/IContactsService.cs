@@ -3,13 +3,13 @@ namespace HiooshServer.Services
 {
     public interface IContactsService
     {
-        IEnumerable<Contact> GetAllContacts();
-        void AddContact(Contact contact);
-        void RemoveContact(string id);
-        Contact GetContact(string id);
-        void UpdateContact(string id, string nickname, string image, List<Message> chat);
-        IEnumerable<Message> GetMessages(string id);
-        void AddMessage (string id, Message message);
+        IEnumerable<Contact> GetAllContacts(string userID);
+        void AddContact(string userID, Contact contact);
+        void RemoveContact(string userID, string contactID);
+        Contact GetContact(string userID, string contactID);
+        void UpdateContact(string userID, string contactID, string nickname, string image, List<Message> chat);
+        IEnumerable<Message> GetMessages(string userID, string contactID);
+        void AddMessage (string userID, string contactID, Message message);
 
     }
 }
