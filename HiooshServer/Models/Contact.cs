@@ -2,10 +2,13 @@
 {
     public class Contact
     {
-        public string Id { get; set; }
-        public string Nickname { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
+        public string server { get; set; }
+        public string last { get; set; }
+        public string lastdate { get; set; }
         public string image { get; set; }
-        public List<Message> Chat { get; set; }
+        public List<Message> chat { get; set; }
 
     }
 }

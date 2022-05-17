@@ -34,7 +34,7 @@ namespace HiooshServer.Services
             User user = getUser(userID);
             if (user.Contacts != null)
             {
-                return user.Contacts.Find(x => x.Id == contactID);
+                return user.Contacts.Find(x => x.id == contactID);
             }
             return null;
         }
@@ -54,9 +54,9 @@ namespace HiooshServer.Services
             Contact contact = GetContact(userID, contactID);
             if (contact != null)
             {
-                contact.Nickname = nickname;
+                contact.name = nickname;
                 contact.image = image;
-                contact.Chat = chat;
+                contact.chat = chat;
             }
         }
 
@@ -64,14 +64,16 @@ namespace HiooshServer.Services
         public IEnumerable<Message> GetMessages(string userID, string contactID)
         {
             Contact contact = GetContact(userID, contactID);
-            return contact.Chat;
+            return contact.chat;
         }
 
         // add message to the chat with the contact with this id
         public void AddMessage(string userID, string contactID, Message message)
         {
             Contact contact = GetContact(userID, contactID);
-            contact.Chat.Add(message);
+            contact.chat.Add(message);
+            contact.last = message.content;
+            contact.lastdate = message.date;
         }
     }
 }
