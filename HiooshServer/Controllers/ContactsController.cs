@@ -104,6 +104,32 @@ namespace HiooshServer.Controllers
             return BadRequest();
         }
 
+        [Route("api/contacts/{id1}/messages/{id2}")]
+        [HttpPut("{id2}")]
+        public IActionResult UpdateMessage(string userID, string id1, int id2, string content)
+        {
+            Message? message = _contactsService.GetMessage(userID, id1, id2);
+            if (message != null)
+            {
+                _contactsService.UpdateMessage(userID, id1, id2, content);
+                return NoContent();
 
+            }
+            return BadRequest();
+        }
+
+        [Route("api/contacts/{id1}/messages/{id2}")]
+        [HttpDelete("{id2}")]
+        public IActionResult DeleteMessage(string userID, string id1, int id2)
+        {
+            Message? message = _contactsService.GetMessage(userID, id1, id2);
+            if (message != null)
+            {
+                _contactsService.RemoveMessage(userID, id1, id2);
+                return NoContent();
+
+            }
+            return BadRequest();
+        }
     }
 }
