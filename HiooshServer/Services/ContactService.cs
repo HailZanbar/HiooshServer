@@ -15,10 +15,6 @@ namespace HiooshServer.Services
         public IEnumerable<Contact> GetAllContacts(string userID)
         {
             User user = getUser(userID);
-            if (user == null)
-            {
-                return null;
-            }
             return user.Contacts;
         }
 
@@ -29,7 +25,7 @@ namespace HiooshServer.Services
             user.Contacts.Add(contact);
         }
 
-        public Contact GetContact(string userID, string contactID)
+        public Contact? GetContact(string userID, string contactID)
         {
             User user = getUser(userID);
             if (user.Contacts != null)
@@ -49,19 +45,18 @@ namespace HiooshServer.Services
             }
             
         }
-        public void UpdateContact(string userID, string contactID, string nickname, string image, List<Message> chat)
+        public void UpdateContact(string userID, string contactID, string nickname, string server)
         {
             Contact contact = GetContact(userID, contactID);
             if (contact != null)
             {
                 contact.name = nickname;
-                contact.image = image;
-                contact.chat = chat;
+                contact.server = server;
             }
         }
 
         // get the chat with the contact with this id
-        public IEnumerable<Message> GetMessages(string userID, string contactID)
+        public List<Message> GetMessages(string userID, string contactID)
         {
             Contact contact = GetContact(userID, contactID);
             return contact.chat;
@@ -70,10 +65,41 @@ namespace HiooshServer.Services
         // add message to the chat with the contact with this id
         public void AddMessage(string userID, string contactID, Message message)
         {
-            Contact contact = GetContact(userID, contactID);
-            contact.chat.Add(message);
-            contact.last = message.content;
-            contact.lastdate = message.date;
+            Contact? contact = GetContact(userID, contactID);
+            if (contact != null)
+            { 
+                contact.chat.Add(message);
+                contact.last = message.content;
+                contact.lastdate = message.created;
+            }
+        }
+
+        public Message? GetMessage(string userID, string contactID, int messageID)
+        {
+            List<Message> messages = GetMessages(userID, contactID);
+            if (messages.Count == 0)
+            {
+                return null;
+            }
+            return messages.Find(x => x.id == messageID);
+        }
+        public void RemoveMessage(string userID, string contactID, int messageID)
+        {
+            Message? message = GetMessage(userID, contactID, messageID);
+            if (message == null)
+            {
+                return;
+            }
+            List<Message> messages = GetMessages(userID, contactID);
+            messages.Remove(message);
+        }
+        public void UpdateMessage(string userID, string contactID, int messageID, string content)
+        {
+            Message message = GetMessage(userID, contactID, messageID);
+            if (message != null) 
+            {
+                message.content = content;
+            }
         }
     }
 }
