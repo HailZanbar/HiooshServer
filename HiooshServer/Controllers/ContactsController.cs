@@ -16,14 +16,13 @@ namespace HiooshServer.Controllers
         }
 
         // return the contacts of the user
-        [HttpGet]
         public IActionResult Index(string userID)
         {
             // need to fix the async
             return Json(_contactsService.GetAllContacts(userID));
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         public IActionResult Create(string userID, string id, string name, string server)
         {
           if (!ModelState.IsValid)

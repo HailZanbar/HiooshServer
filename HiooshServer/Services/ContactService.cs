@@ -4,7 +4,7 @@ namespace HiooshServer.Services
 {
     public class ContactService : IContactsService
     {
-
+        
         private static List<User> users = new List<User>();
 
         // constructor

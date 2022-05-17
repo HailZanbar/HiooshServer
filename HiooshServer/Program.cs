@@ -17,6 +17,11 @@ builder.Services.AddSingleton<IContactsService, ContactService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(120);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
