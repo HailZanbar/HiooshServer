@@ -7,6 +7,23 @@ namespace HiooshServer.Services
 
         private static List<User> users = new List<User>();
 
+        // constructor
+        public ContactService()
+        {
+            Message m1 = new Message(1, "hi", true, "17.5.22");
+            Message m2 = new Message(2, "bye", false, "17.5.22");
+            Contact contHadas = new Contact("hadas", "doosa", "server");
+            contHadas.chat.Add(m1);
+            contHadas.chat.Add(m2);
+            Contact contShira = new Contact("shira", "shiroosh", "server");
+            contShira.chat.Add(m1);
+            contShira.chat.Add(m2);
+            User user = new User("Hail", "1234", "hailoosh", "im");
+            user.Contacts.Add(contHadas);
+            user.Contacts.Add(contShira);
+            users.Add(user);
+        }
+
         private User getUser(string id)
         {
             return users.Find(x => x.Id == id);

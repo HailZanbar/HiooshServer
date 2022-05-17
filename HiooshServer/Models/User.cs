@@ -2,6 +2,14 @@
 {
     public class User
     {
+        public User (string id, string password, string nickname, string image)
+        {
+            Id = id;   
+            Password = password;
+            Nickname = nickname;
+            Image = image;
+            Contacts = new List<Contact> ();
+        }
         public string Id { get; set; }
         public string Password { get; set; }
         public string Nickname { get; set; }
