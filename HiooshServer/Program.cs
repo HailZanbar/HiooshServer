@@ -19,7 +19,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(120);
+    options.IdleTimeout = TimeSpan.FromMinutes(7);
 });
 
 var app = builder.Build();
@@ -34,6 +34,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

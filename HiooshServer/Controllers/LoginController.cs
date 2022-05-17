@@ -16,12 +16,9 @@ namespace HiooshServer.Controllers
         [HttpPost("{id}")]
         public IActionResult Login(string id)
         {
-            if (!ModelState.IsValid)
-            {
-                //HttpContext.Session.SetString("userid", id);
-                return Created(string.Format("/api/login", id), id);
-            }
-            return BadRequest();
+            HttpContext.Session.SetString("username", id);
+            return Created(string.Format("/api/login", id), id);
+            
         }
     }
 }
