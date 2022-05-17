@@ -29,7 +29,7 @@ namespace HiooshServer.Controllers
            if (!ModelState.IsValid)
             {
                 _contactsService.AddContact(userID, contact);
-                return Created(string.Format("/api/contacts/{0}", contact.Id), contact);
+                return Created(string.Format("/api/contacts/{0}", contact.id), contact);
             }
            return BadRequest();
         }
@@ -69,9 +69,9 @@ namespace HiooshServer.Controllers
 
         [Route("api/contacts/{id}/messages")]
         [HttpPost("{id}")]
-        public IActionResult AddMessage(string userID, string id , int id2, string type, string content, string own, string time, string date)
+        public IActionResult AddMessage(string userID, string id , int id2, string type, string content, string from, string to, string time, string date)
         {
-            Message message = new Message(id2, type, content, own, time, date);
+            Message message = new Message(id2, type, content, from, to, time, date);
             if (!ModelState.IsValid)
             {
                 _contactsService.AddMessage(userID, id, message);
