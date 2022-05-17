@@ -12,6 +12,8 @@ builder.Services.AddDbContext<HiooshServerContext>(options =>
 // indection
 builder.Services.AddSingleton<IRatingsService, RatingService>();
 
+builder.Services.AddSingleton<IContactsService, ContactService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
