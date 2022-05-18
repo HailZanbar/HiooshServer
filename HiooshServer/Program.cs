@@ -19,7 +19,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(7);
+    options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
 var app = builder.Build();

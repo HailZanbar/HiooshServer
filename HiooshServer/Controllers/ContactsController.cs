@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using HiooshServer.Services;
 using HiooshServer.Models;
 
@@ -27,10 +28,15 @@ namespace HiooshServer.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(string id, string name, string server)
+        public IActionResult Create([FromBody] JsonElement fields)
         {
           if (HttpContext.Session.GetString("username") != null)
             {
+                // get the fields from the body request
+                string id = fields.GetProperty("id").ToString();
+                string name = fields.GetProperty("name").ToString();
+                string server = fields.GetProperty("server").ToString();
+
                 Contact contact = new Contact(id, name, server);
                 _contactsService.AddContact(HttpContext.Session.GetString("username"), contact);
                 return Created(string.Format("/api/contacts/{0}", contact.id), contact);
@@ -40,11 +46,15 @@ namespace HiooshServer.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Edit(string id, string nickname, string server)
+        public IActionResult Edit(string id, [FromBody] JsonElement fields)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
-                _contactsService.UpdateContact(HttpContext.Session.GetString("username"), id, nickname, server);
+                // get the name and the server fields from the body request
+                string name = fields.GetProperty("name").ToString();
+                string server = fields.GetProperty("server").ToString();
+
+                _contactsService.UpdateContact(HttpContext.Session.GetString("username"), id, name, server);
                 return NoContent();
 
             }
@@ -64,8 +74,9 @@ namespace HiooshServer.Controllers
             return BadRequest();
         }
 
+        [Route("api/contacts/{id}")]
         [HttpGet("{id}")]
-        public IActionResult Get(string userID, string id)
+        public IActionResult Get(string id)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
@@ -76,12 +87,12 @@ namespace HiooshServer.Controllers
                 }
             }
             // need to take care the view if not login
-            return BadRequest();
+            return NotFound();
         }
 
         // need to check how to add the "messages" to the url
-        [Route("api/contacts/{id}/messages")]
-        [HttpGet("{id}")]
+        //[Route("api/contacts/{id}/messages")]
+        [HttpGet("{id}/messages")]
         public IActionResult GetMessages(string id)
         {
             if (HttpContext.Session.GetString("username") != null)
@@ -96,24 +107,36 @@ namespace HiooshServer.Controllers
             return BadRequest();
         }
 
-        [Route("api/contacts/{id}/messages")]
-        [HttpPost("{id}")]
-        public IActionResult AddMessage(string id , int msg_id, string content, bool sent, string created)
+      
+        [HttpPost("{id}/messages")]
+        public IActionResult AddMessage(string id , [FromBody] JsonElement fields)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
+                // get the content field from the body request
+                string content = fields.GetProperty("content").ToString();
+
                 List<Message> messages = _contactsService.GetMessages(HttpContext.Session.GetString("username"), id);
-                int id_of_last = messages[messages.Count - 1].id;
-                Message message = new Message(id_of_last++, content, true, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+
+                // the id of the new message
+                int id_of_last;
+                if (messages.Count == 0)
+                {
+                    id_of_last = 0;
+                } else
+                {
+                    id_of_last = messages[messages.Count - 1].id;
+                }
+
+                Message message = new Message(id_of_last + 1, content, true, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
                 _contactsService.AddMessage(HttpContext.Session.GetString("username"), id, message);
-                return NoContent();
+                return Created(string.Format("/api/contacts/{0}/messages/{1}", id, message.id), message);
             }
             // need to take care if is not 
             return BadRequest();
         }
 
-        [Route("api/contacts/{id1}/messages/{id2}")]
-        [HttpGet("{id2}")]
+        [HttpGet("{id1}/messages/{id2}")]
         public IActionResult GetMessage(string id1, int id2)
         {
             if (HttpContext.Session.GetString("username") != null)
@@ -128,15 +151,17 @@ namespace HiooshServer.Controllers
             return BadRequest();
         }
 
-        [Route("api/contacts/{id1}/messages/{id2}")]
-        [HttpPut("{id2}")]
-        public IActionResult UpdateMessage(string id1, int id2, string content)
+        [HttpPut("{id1}/messages/{id2}")]
+        public IActionResult UpdateMessage(string id1, int id2, [FromBody] JsonElement fields)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
                 Message? message = _contactsService.GetMessage(HttpContext.Session.GetString("username"), id1, id2);
                 if (message != null)
                 {
+                    // get the content field from the body request
+                    string content = fields.GetProperty("content").ToString();
+
                     _contactsService.UpdateMessage(HttpContext.Session.GetString("username"), id1, id2, content);
                     return NoContent();
 
@@ -146,9 +171,8 @@ namespace HiooshServer.Controllers
             return BadRequest();
         }
 
-        [Route("api/contacts/{id1}/messages/{id2}")]
-        [HttpDelete("{id2}")]
-        public IActionResult DeleteMessage(string userID, string id1, int id2)
+        [HttpDelete("{id1}/messages/{id2}")]
+        public IActionResult DeleteMessage(string id1, int id2)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
