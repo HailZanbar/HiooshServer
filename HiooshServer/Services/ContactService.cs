@@ -24,7 +24,7 @@ namespace HiooshServer.Services
             users.Add(user);
         }
 
-        public User GetUser(string id)
+        public User? GetUser(string id)
         {
             return users.Find(x => x.Id == id);
         }
@@ -32,6 +32,10 @@ namespace HiooshServer.Services
         public List<User> GetUsers()
         {
             return users;
+        }
+        public void AddUser(User user)
+        {
+            users.Add(user);
         }
 
         public IEnumerable<Contact> GetAllContacts(string userID)
