@@ -18,33 +18,38 @@ namespace HiooshServer.Services
             Contact contShira = new Contact("shira", "shiroosh", "server");
             contShira.chat.Add(m1);
             contShira.chat.Add(m2);
-            User user = new User("Hail", "1234", "hailoosh", "im");
+            User user = new User("Hail", "Aa123456", "hailoosh", "im");
             user.Contacts.Add(contHadas);
             user.Contacts.Add(contShira);
             users.Add(user);
         }
 
-        private User getUser(string id)
+        private User GetUser(string id)
         {
             return users.Find(x => x.Id == id);
         }
 
+        public List<User> GetUsers()
+        {
+            return users;
+        }
+
         public IEnumerable<Contact> GetAllContacts(string userID)
         {
-            User user = getUser(userID);
+            User user = GetUser(userID);
             return user.Contacts;
         }
 
 
         public void AddContact(string userID, Contact contact)
         {
-            User user = getUser(userID);
+            User user = GetUser(userID);
             user.Contacts.Add(contact);
         }
 
         public Contact? GetContact(string userID, string contactID)
         {
-            User user = getUser(userID);
+            User user = GetUser(userID);
             if (user.Contacts != null)
             {
                 return user.Contacts.Find(x => x.id == contactID);
@@ -54,7 +59,7 @@ namespace HiooshServer.Services
 
         public void RemoveContact(string userID, string contactID)
         {
-            User user = getUser(userID);
+            User user = GetUser(userID);
             Contact contact = GetContact(userID, contactID);
             if (contact != null)
             {

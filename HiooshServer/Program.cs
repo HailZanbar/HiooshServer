@@ -31,6 +31,8 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 
+app.UseCors("Allow All");
+
 app.UseRouting();
 
 app.UseAuthorization();

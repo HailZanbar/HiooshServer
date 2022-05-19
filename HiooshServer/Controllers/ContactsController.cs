@@ -186,5 +186,12 @@ namespace HiooshServer.Controllers
             }
             return BadRequest();
         }
+        
+        // a method to get the users list
+        [HttpGet("users")]
+        public IActionResult GetUsers()
+        {
+            return Json(_contactsService.GetUsers());
+        }
     }
 }
