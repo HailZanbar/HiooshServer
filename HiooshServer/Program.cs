@@ -22,6 +22,15 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Allow All",
+        builder =>
+        {
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,6 +47,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.UseSession();
+
+app.UseCors("Allow All");
 
 app.MapControllerRoute(
     name: "default",
