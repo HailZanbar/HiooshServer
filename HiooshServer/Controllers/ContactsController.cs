@@ -17,6 +17,7 @@ namespace HiooshServer.Controllers
         }
 
         // return the contacts of the user
+        [HttpGet]
         public IActionResult Index()
         {
             if (HttpContext.Session.GetString("username") == null)
@@ -25,6 +26,7 @@ namespace HiooshServer.Controllers
                 return BadRequest();
             }
             return Json(_contactsService.GetAllContacts(HttpContext.Session.GetString("username")));
+            //return Json(_contactsService.GetAllContacts(fields.GetProperty("user").ToString()));
         }
 
         [HttpPost]
@@ -128,7 +130,7 @@ namespace HiooshServer.Controllers
                     id_of_last = messages[messages.Count - 1].id;
                 }
 
-                Message message = new Message(id_of_last + 1, content, true, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                Message message = new Message(id_of_last + 1, content, true, DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), "Text");
                 _contactsService.AddMessage(HttpContext.Session.GetString("username"), id, message);
                 return Created(string.Format("/api/contacts/{0}/messages/{1}", id, message.id), message);
             }

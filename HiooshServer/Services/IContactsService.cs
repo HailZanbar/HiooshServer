@@ -11,8 +11,9 @@ namespace HiooshServer.Services
         List<Message> GetMessages(string userID, string contactID);
         void AddMessage (string userID, string contactID, Message message);
         Message? GetMessage(string userID, string contactID, int messageID);
+        User GetUser(string id);
+        List<User> GetUsers();
         void RemoveMessage (string userID, string contactID, int messageID);
         void UpdateMessage (string userID, string contactID, int messageID, string content);
-        List<User> GetUsers();
     }
 }

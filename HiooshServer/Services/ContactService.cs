@@ -10,21 +10,21 @@ namespace HiooshServer.Services
         // constructor
         public ContactService()
         {
-            Message m1 = new Message(1, "hi", true, "17.5.22");
-            Message m2 = new Message(2, "bye", false, "17.5.22");
+            Message m1 = new Message(1, "hi", true, "17.5.22","Text");
+            Message m2 = new Message(2, "bye", false, "17.5.22", "Text");
             Contact contHadas = new Contact("hadas", "doosa", "server");
             contHadas.chat.Add(m1);
             contHadas.chat.Add(m2);
             Contact contShira = new Contact("shira", "shiroosh", "server");
             contShira.chat.Add(m1);
             contShira.chat.Add(m2);
-            User user = new User("Hail", "Aa123456", "hailoosh", "im");
+            User user = new User("Hail", "Aa123456", "hailoosh", null);
             user.Contacts.Add(contHadas);
             user.Contacts.Add(contShira);
             users.Add(user);
         }
 
-        private User GetUser(string id)
+        public User GetUser(string id)
         {
             return users.Find(x => x.Id == id);
         }

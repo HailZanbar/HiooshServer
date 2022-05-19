@@ -2,6 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using HiooshServer.Data;
 using HiooshServer.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 /*
@@ -17,10 +20,22 @@ builder.Services.AddSingleton<IContactsService, ContactService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(40);
-});
+/*
+// for the cookie
+builder.Services.AddAuthentication(options => {
+    options.DefaultScheme = "Cookies";
+}).AddCookie("Cookies", options => {
+    options.Cookie.Name = "Cookie_Name";
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = redirectContext =>
+        {
+            redirectContext.HttpContext.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        }
+    };
+});*/
 
 builder.Services.AddCors(options =>
 {
@@ -29,6 +44,11 @@ builder.Services.AddCors(options =>
         {
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
         });
+});
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
 var app = builder.Build();
@@ -48,10 +68,18 @@ app.UseAuthorization();
 
 app.UseSession();
 
-app.UseCors("Allow All");
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ratings}/{action=Index}/{id?}");
+/*
+ for the coockies
+app.UseCookiePolicy(
+    new CookiePolicyOptions
+    {
+        Secure = CookieSecurePolicy.Always
+    });
+// for the cookie
+app.UseAuthentication();
+app.UseAuthorization();*/
 
 app.Run();
