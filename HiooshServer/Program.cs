@@ -35,6 +35,8 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(40);
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,5 +57,10 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ratings}/{action=Index}/{id?}");
+
+app.UseEndpoints(endpoints =>
+{ 
+endpoints.MapHub<HiooshServer.Hubs.ChatHub>("/chatHub");
+});
 
 app.Run();
