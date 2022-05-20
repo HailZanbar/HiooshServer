@@ -17,7 +17,7 @@ namespace HiooshServer.Controllers
         [HttpPost]
         public IActionResult AddMessage([FromBody] JsonElement fields)
         {
-            if (!ModelState.IsValid)
+            if (_contactsService.GetContact(fields.GetProperty("from").ToString(), fields.GetProperty("to").ToString()) != null)
             { 
                 string to = fields.GetProperty("to").ToString();
                 string from = fields.GetProperty("from").ToString();
@@ -39,7 +39,7 @@ namespace HiooshServer.Controllers
                 _contactsService.AddMessage(to, from, message);
                 return Created(string.Format("/api/tranfer/{0}", message.id), message);
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }

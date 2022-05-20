@@ -12,16 +12,24 @@ namespace HiooshServer.Services
         {
             Message m1 = new Message(1, "hi", true, "17.5.22","Text");
             Message m2 = new Message(2, "bye", false, "17.5.22", "Text");
-            Contact contHadas = new Contact("hadas", "doosa", "server");
+            Contact contHadas = new Contact("hadas", "doosa", "localhost:5034");
             contHadas.chat.Add(m1);
             contHadas.chat.Add(m2);
-            Contact contShira = new Contact("shira", "shiroosh", "server");
+            Contact contShira = new Contact("shira", "shiroosh", "localhost:5034");
             contShira.chat.Add(m1);
             contShira.chat.Add(m2);
-            User user = new User("Hail", "Aa123456", "hailoosh", null);
-            user.Contacts.Add(contHadas);
-            user.Contacts.Add(contShira);
-            users.Add(user);
+            Contact contHail = new Contact("Hail", "hailos", "localhost:5034");
+            contHail.chat.Add(new Message(1, "hi", false, "17.5.22", "Text"));
+            contHail.chat.Add(new Message(2, "bye", true, "17.5.22", "Text"));
+            User user1 = new User("Hail", "Aa123456", "hailoosh", null);
+            user1.Contacts.Add(contHadas);
+            user1.Contacts.Add(contShira);
+            User user2 = new User("hadas", "Aa123456", "doosa", null);
+            user2.Contacts.Add(contHail);
+            User user3 = new User("ortal", "Aa123456", "oratalosh", null);
+            users.Add(user1);
+            users.Add(user2);
+            users.Add(user3);
         }
 
         public User? GetUser(string id)

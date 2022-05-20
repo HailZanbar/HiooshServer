@@ -17,13 +17,13 @@ namespace HiooshServer.Controllers
         }
 
         // return the contacts of the user
-        [HttpGet("{user}")]
+        [HttpGet]
         public IActionResult Index(string user)
         {
             if (_contactsService.GetUser(user) == null)
             {
                 // need to take care to return view that user is not login
-                return BadRequest();
+                return NotFound();
             }
             return Json(_contactsService.GetAllContacts(user));
         }
@@ -43,7 +43,7 @@ namespace HiooshServer.Controllers
                 return Created(string.Format("/api/contacts/{0}", contact.id), contact);
             }
             // need to take care to return view that user is not login
-            return BadRequest();
+            return NotFound();
         }
 
         [HttpPut("{id}")]
@@ -60,7 +60,7 @@ namespace HiooshServer.Controllers
 
             }
             // need to take care to return view that user is not login
-            return BadRequest();
+            return NotFound();
         }
 
         [HttpDelete("{id}")]
@@ -72,11 +72,10 @@ namespace HiooshServer.Controllers
                 return NoContent();
             }
             // if not login
-            return BadRequest();
+            return NotFound();
         }
 
-        //[Route("api/contacts/{user}/{id}")]
-        [HttpGet("{user}/{id}")]
+        [HttpGet("{id}")]
         public IActionResult Get(string user, string id)
         {
             if (_contactsService.GetUser(user) != null)
@@ -92,8 +91,7 @@ namespace HiooshServer.Controllers
         }
 
         // need to check how to add the "messages" to the url
-        //[Route("api/contacts/{user}/{id}/messages")]
-        [HttpGet("{user}/{id}/messages")]
+        [HttpGet("{id}/messages")]
         public IActionResult GetMessages(string user, string id)
         {
             if (_contactsService.GetUser(user) != null)
@@ -105,7 +103,7 @@ namespace HiooshServer.Controllers
                 }
             }
             // need to take care the part of view if not login
-            return BadRequest();
+            return NotFound();
         }
 
       
@@ -134,11 +132,10 @@ namespace HiooshServer.Controllers
                 return Created(string.Format("/api/contacts/{0}/messages/{1}", id, message.id), message);
             }
             // need to take care if is not 
-            return BadRequest();
+            return NotFound();
         }
 
-        //[Route("api/contacts/{user}/{id}/messages/{id2}")]
-        [HttpGet("{user}/{id1}/messages/{id2}")]
+        [HttpGet("{id1}/messages/{id2}")]
         public IActionResult GetMessage(string user, string id1, int id2)
         {
             if (_contactsService.GetUser(user) != null)
@@ -150,7 +147,7 @@ namespace HiooshServer.Controllers
 
                 }
             }
-            return BadRequest();
+            return NotFound();
         }
 
         [HttpPut("{id1}/messages/{id2}")]
@@ -163,14 +160,12 @@ namespace HiooshServer.Controllers
                 {
                     // get the content field from the body request
                     string content = fields.GetProperty("content").ToString();
-
                     _contactsService.UpdateMessage(fields.GetProperty("userid").ToString(), id1, id2, content);
                     return NoContent();
-
                 }
             }
             // need to take care of the view if not login
-            return BadRequest();
+            return NotFound();
         }
 
         [HttpDelete("{id1}/messages/{id2}")]
@@ -183,10 +178,9 @@ namespace HiooshServer.Controllers
                 {
                     _contactsService.RemoveMessage(fields.GetProperty("userid").ToString(), id1, id2);
                     return NoContent();
-
                 }
             }
-            return BadRequest();
+            return NotFound();
         }
     }
 }

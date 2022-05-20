@@ -23,7 +23,7 @@ namespace HiooshServer.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] JsonElement fields)
         {
-            if (_contactsService.GetUser(fields.GetProperty("userid").ToString()) != null)
+            if (_contactsService.GetUser(fields.GetProperty("id").ToString()) == null)
             {
                 // get the fields from the body request
                 string id = fields.GetProperty("id").ToString();
@@ -36,7 +36,7 @@ namespace HiooshServer.Controllers
                 return Created(string.Format("/api/users/", user), user);
             }
             // need to take care to return view that user is not login
-            return BadRequest();
+            return NotFound();
         }
     }
 }

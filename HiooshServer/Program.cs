@@ -20,22 +20,6 @@ builder.Services.AddSingleton<IContactsService, ContactService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-/*
-// for the cookie
-builder.Services.AddAuthentication(options => {
-    options.DefaultScheme = "Cookies";
-}).AddCookie("Cookies", options => {
-    options.Cookie.Name = "Cookie_Name";
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnRedirectToLogin = redirectContext =>
-        {
-            redirectContext.HttpContext.Response.StatusCode = 401;
-            return Task.CompletedTask;
-        }
-    };
-});*/
 
 builder.Services.AddCors(options =>
 {
@@ -71,15 +55,5 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Ratings}/{action=Index}/{id?}");
-/*
- for the coockies
-app.UseCookiePolicy(
-    new CookiePolicyOptions
-    {
-        Secure = CookieSecurePolicy.Always
-    });
-// for the cookie
-app.UseAuthentication();
-app.UseAuthorization();*/
 
 app.Run();
