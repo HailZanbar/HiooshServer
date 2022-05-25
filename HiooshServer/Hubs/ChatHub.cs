@@ -14,38 +14,29 @@ namespace HiooshServer.Hubs
 
         public void CreateConID(string userID)
         {
-            if (usersConID.ContainsKey(userID))
-            {
-                usersConID[userID] = Context.ConnectionId;
-            } else
-            {
-                usersConID.Add(userID, Context.ConnectionId);
+            lock (usersConID) { 
+                if (usersConID.ContainsKey(userID))
+                {
+                    usersConID[userID] = Context.ConnectionId;
+                }
+                else
+                {
+                    usersConID.Add(userID, Context.ConnectionId);
+                }
             }
         }
 
         public async Task SendMessage(string username, string message)
         {
             //createConID(username);
+            if (!usersConID.ContainsKey(username))
+            {
+                return;
+            }
             var conID = usersConID[username];
             await Clients.Client((string)conID).SendAsync("ReceiveMessage", message);
 
-
-            /*
-            string connectionToSendMessage;
-            Connections.TryGetValue(username, out connectionToSendMessage);
-
-            if (string.IsNullOrWhiteSpace(connectionToSendMessage))
-            {
-                Connections.TryAdd(username, Context.ConnectionId);
-            }
-            await Clients.Client(connectionToSendMessage).SendAsync("ReceiveMessage", message);
-            */
         }
 
-        /*
-        public async Task SendMessage(Message message, string clientId)
-        {
-            await Clients.Client(clientId).SendAsync("ReceiveMessage", message);
-        }*/
     }
 }
