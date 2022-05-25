@@ -10,8 +10,8 @@ namespace HiooshServer.Services
         // constructor
         public ContactService()
         {
-            Message m1 = new Message(1, "hi", true, "17.5.22","Text");
-            Message m2 = new Message(2, "bye", false, "17.5.22", "Text");
+            Message m1 = new Message(1, "hi", true, "05/24/2022 08:48 AM", "Text");
+            Message m2 = new Message(2, "bye", false, "05/24/2022 08:50 AM", "Text");
             Contact contHadasForHail = new Contact("hadas", "doosa", "localhost:5034");
             contHadasForHail.chat.Add(m1);
             contHadasForHail.chat.Add(m2);

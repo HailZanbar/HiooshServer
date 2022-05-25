@@ -64,7 +64,7 @@ namespace HiooshServer.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string user, string id, [FromBody] JsonElement fields)
+        public IActionResult Delete(string user, string id)
         {
             if (_contactsService.GetUser(user) != null)
             {
@@ -136,11 +136,11 @@ namespace HiooshServer.Controllers
         }
 
         [HttpGet("{id1}/messages/{id2}")]
-        public IActionResult GetMessage(string user, string id1, int id2)
+        public IActionResult GetMessage(string user, string id1, string id2)
         {
             if (_contactsService.GetUser(user) != null)
             {
-                Message? message = _contactsService.GetMessage(user, id1, id2);
+                Message? message = _contactsService.GetMessage(user, id1, Int32.Parse(id2));
                 if (message != null)
                 {
                     return Json(message);
@@ -151,16 +151,16 @@ namespace HiooshServer.Controllers
         }
 
         [HttpPut("{id1}/messages/{id2}")]
-        public IActionResult UpdateMessage(string user, string id1, int id2, [FromBody] JsonElement fields)
+        public IActionResult UpdateMessage(string user, string id1, string id2, [FromBody] JsonElement fields)
         {
             if (_contactsService.GetUser(user) != null)
             {
-                Message? message = _contactsService.GetMessage(user, id1, id2);
+                Message? message = _contactsService.GetMessage(user, id1, Int32.Parse(id2));
                 if (message != null)
                 {
                     // get the content field from the body request
                     string content = fields.GetProperty("content").ToString();
-                    _contactsService.UpdateMessage(user, id1, id2, content);
+                    _contactsService.UpdateMessage(user, id1, Int32.Parse(id2), content);
                     return NoContent();
                 }
             }
@@ -169,14 +169,14 @@ namespace HiooshServer.Controllers
         }
 
         [HttpDelete("{id1}/messages/{id2}")]
-        public IActionResult DeleteMessage(string user, string id1, int id2, [FromBody] JsonElement fields)
+        public IActionResult DeleteMessage(string user, string id1, string id2)
         {
             if (_contactsService.GetUser(user) != null)
             {
-                Message? message = _contactsService.GetMessage(user, id1, id2);
+                Message? message = _contactsService.GetMessage(user, id1, Int32.Parse(id2));
                 if (message != null)
                 {
-                    _contactsService.RemoveMessage(user, id1, id2);
+                    _contactsService.RemoveMessage(user, id1, Int32.Parse(id2));
                     return NoContent();
                 }
             }
