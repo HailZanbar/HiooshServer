@@ -4,6 +4,7 @@ using HiooshServer.Data;
 using HiooshServer.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using HiooshServer.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +27,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Allow All",
         builder =>
         {
-            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+            .AllowCredentials()
+                           .WithOrigins("http://localhost:3000"); ;
         });
 });
 
@@ -60,7 +63,7 @@ app.MapControllerRoute(
 
 app.UseEndpoints(endpoints =>
 { 
-endpoints.MapHub<HiooshServer.Hubs.ChatHub>("/chatHub");
+endpoints.MapHub<ChatHub>("/chatHub");
 });
 
 app.Run();
