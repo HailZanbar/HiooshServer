@@ -16,6 +16,7 @@ namespace HiooshServer.Controllers
             _contactsService = contactsService;
         }
 
+
         // return the contacts of the user
         [HttpGet]
         public IActionResult Index(string user)
