@@ -64,6 +64,8 @@ app.MapControllerRoute(
 app.UseEndpoints(endpoints =>
 { 
 endpoints.MapHub<ChatHub>("/chatHub");
+endpoints.MapHub<InvitationsHub>("/invitationsHub");
 });
+
 
 app.Run();

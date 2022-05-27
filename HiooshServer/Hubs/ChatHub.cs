@@ -10,18 +10,18 @@ namespace HiooshServer.Hubs
     {
         //private static ConcurrentDictionary<string, string> Connections = new ConcurrentDictionary<string, string>();
 
-        private static Hashtable usersConID = new Hashtable();
+        private static Hashtable usersChatConID = new Hashtable();
 
         public void CreateConID(string userID)
         {
-            lock (usersConID) { 
-                if (usersConID.ContainsKey(userID))
+            lock (usersChatConID) { 
+                if (usersChatConID.ContainsKey(userID))
                 {
-                    usersConID[userID] = Context.ConnectionId;
+                    usersChatConID[userID] = Context.ConnectionId;
                 }
                 else
                 {
-                    usersConID.Add(userID, Context.ConnectionId);
+                    usersChatConID.Add(userID, Context.ConnectionId);
                 }
             }
         }
@@ -29,11 +29,11 @@ namespace HiooshServer.Hubs
         public async Task SendMessage(string username, string message)
         {
             //createConID(username);
-            if (!usersConID.ContainsKey(username))
+            if (!usersChatConID.ContainsKey(username))
             {
                 return;
             }
-            var conID = usersConID[username];
+            var conID = usersChatConID[username];
             await Clients.Client((string)conID).SendAsync("ReceiveMessage", message);
 
         }
